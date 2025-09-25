@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Workout - Smart Logger</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/workout.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="container workout-container">
+
+        <div id="setup-view">
+            <header class="workout-header">
+                <h1>Plan Your Workout</h1>
+            </header>
+            <section class="card">
+                <div class="form-group">
+                    <label for="workout-template">Choose a Template</label>
+                    <select id="workout-template">
+                        <option value="custom">-- New Custom Workout --</option>
+                        <option value="upper_body_day">Upper Body</option>
+                        <option value="lower_body_day">Lower Body</option>
+                        <option value="kettlebell_workout">Kettlebell Workout</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="add-exercise-input">Add an Exercise</label>
+                    <div class="autocomplete-wrapper">
+                        <div class="compound-input">
+                            <input type="text" id="add-exercise-input" placeholder="e.g., Barbell Bench Press" autocomplete="off">
+                            <button id="add-exercise-btn" class="btn-add">+</button>
+                        </div>
+                        <div id="autocomplete-suggestions"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="card">
+                <h3>Today's Exercises</h3>
+                <ul id="exercise-list">
+                    </ul>
+                <button id="start-workout-btn" class="btn btn-primary btn-full-width">Start Logging</button>
+            </section>
+        </div>
+
+        <div id="logging-view" class="hidden">
+            <header class="workout-header">
+                <h1 id="logging-exercise-name">Exercise Name</h1>
+                <p id="workout-progress-indicator">Exercise 1 of 5</p>
+            </header>
+
+            <div id="exercise-content-container">
+                </div>
+
+            <div class="navigation-buttons">
+                <button id="prev-exercise-btn" class="btn btn-secondary">&larr; Previous</button>
+                <button id="next-exercise-btn" class="btn btn-primary">Next Exercise &rarr;</button>
+            </div>
+        </div>
+
+        <div id="summary-view" class="hidden">
+            <header class="workout-header">
+                <h1 id="summary-title">Workout Summary</h1>
+            </header>
+            <div id="summary-container" class="card">
+                </div>
+            <button id="log-another-btn" class="btn btn-secondary btn-full-width">Log Another Workout</button>
+        </div>
+
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/workout.js"></script>
+</body>
+</html>
