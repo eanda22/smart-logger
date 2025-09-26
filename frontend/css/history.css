@@ -1,0 +1,78 @@
+/* Styles specific to history.html */
+
+#history-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: left;
+}
+
+.session-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.session-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.session-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.session-header p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0;
+}
+
+.session-content {
+    padding: 1.5rem;
+}
+
+.exercise-group {
+    margin-bottom: 1.5rem;
+}
+
+.exercise-group:last-child {
+    margin-bottom: 0;
+}
+
+.exercise-group h3 {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.sets-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sets-table th,
+.sets-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.sets-table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    text-align: left;
+}
+
+.sets-table tr:last-child td {
+    border-bottom: none;
+}
+
+.sets-table td:first-child {
+    width: 50px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-align: center;
+}

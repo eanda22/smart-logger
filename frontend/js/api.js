@@ -1,6 +1,6 @@
 const API_URL = 'http://127.0.0.1:8000/api';
 
-// Renamed for clarity
+// Renamed for clarity to fetch all defined exercises
 async function fetchExercises() {
     try {
         const response = await fetch(`${API_URL}/exercises/`);
@@ -14,7 +14,21 @@ async function fetchExercises() {
     }
 }
 
-// This function will post the entire session object
+// Function to fetch all workout sessions for the history page
+async function fetchWorkoutSessions() {
+    try {
+        const response = await fetch(`${API_URL}/workout-sessions/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch workout sessions:', error);
+        return [];
+    }
+}
+
+// This function posts the entire session object, including all its sets
 async function postWorkoutSession(sessionData) {
     try {
         const response = await fetch(`${API_URL}/workout-sessions/`, {
