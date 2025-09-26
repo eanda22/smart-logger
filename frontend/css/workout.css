@@ -96,6 +96,15 @@
 .suggestion-item:hover {
     background-color: #f1f3f5;
 }
+.suggestion-category {
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
 
 /* --- NEW Single-Page Logging View --- */
 .exercise-log-card {

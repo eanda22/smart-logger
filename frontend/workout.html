@@ -13,6 +13,7 @@
 <body>
     <main class="container workout-container">
 
+        <!-- SETUP VIEW -->
         <div id="setup-view">
             <header class="workout-header">
                 <h1>Plan Your Workout</h1>
@@ -23,9 +24,10 @@
                     <div class="select-wrapper">
                         <select id="workout-template">
                             <option value="custom">-- New Custom Workout --</option>
-                            <option value="upper_body_day">Upper Body</option>
-                            <option value="lower_body_day">Lower Body</option>
-                            <option value="kettlebell_workout">Kettlebell Workout</option>
+                            <option value="Upper Body">Upper Body</option>
+                            <option value="Lower Body">Lower Body</option>
+                            <option value="Core">Core</option>
+                            <option value="Kettlebell">Kettlebell</option>
                         </select>
                     </div>
                 </div>
@@ -48,12 +50,24 @@
             </section>
         </div>
 
+        <!-- LOGGING VIEW -->
         <div id="logging-view" class="hidden">
             <header class="workout-header">
                 <h1 id="logging-workout-title">Log Your Session</h1>
             </header>
-            <div id="log-all-exercises-container">
+
+            <!-- Date Picker Card -->
+            <div class="card">
+                <div class="form-group">
+                    <label for="workout-date">Workout Date</label>
+                    <input type="date" id="workout-date">
                 </div>
+            </div>
+            
+
+            <div id="log-all-exercises-container">
+                <!-- All exercise logs will be dynamically inserted here by JavaScript -->
+            </div>
             <button id="finish-workout-btn" class="btn btn-primary btn-full-width">Finish Workout</button>
         </div>
 
@@ -62,3 +76,4 @@
     <script src="js/workout.js"></script>
 </body>
 </html>
+
