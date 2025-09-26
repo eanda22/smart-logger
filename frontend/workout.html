@@ -20,12 +20,14 @@
             <section class="card">
                 <div class="form-group">
                     <label for="workout-template">Choose a Template</label>
-                    <select id="workout-template">
-                        <option value="custom">-- New Custom Workout --</option>
-                        <option value="upper_body_day">Upper Body</option>
-                        <option value="lower_body_day">Lower Body</option>
-                        <option value="kettlebell_workout">Kettlebell Workout</option>
-                    </select>
+                    <div class="select-wrapper">
+                        <select id="workout-template">
+                            <option value="custom">-- New Custom Workout --</option>
+                            <option value="upper_body_day">Upper Body</option>
+                            <option value="lower_body_day">Lower Body</option>
+                            <option value="kettlebell_workout">Kettlebell Workout</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="add-exercise-input">Add an Exercise</label>
@@ -41,33 +43,18 @@
             <section class="card">
                 <h3>Today's Exercises</h3>
                 <ul id="exercise-list">
-                    </ul>
+                </ul>
                 <button id="start-workout-btn" class="btn btn-primary btn-full-width">Start Logging</button>
             </section>
         </div>
 
         <div id="logging-view" class="hidden">
             <header class="workout-header">
-                <h1 id="logging-exercise-name">Exercise Name</h1>
-                <p id="workout-progress-indicator">Exercise 1 of 5</p>
+                <h1 id="logging-workout-title">Log Your Session</h1>
             </header>
-
-            <div id="exercise-content-container">
+            <div id="log-all-exercises-container">
                 </div>
-
-            <div class="navigation-buttons">
-                <button id="prev-exercise-btn" class="btn btn-secondary">&larr; Previous</button>
-                <button id="next-exercise-btn" class="btn btn-primary">Next Exercise &rarr;</button>
-            </div>
-        </div>
-
-        <div id="summary-view" class="hidden">
-            <header class="workout-header">
-                <h1 id="summary-title">Workout Summary</h1>
-            </header>
-            <div id="summary-container" class="card">
-                </div>
-            <button id="log-another-btn" class="btn btn-secondary btn-full-width">Log Another Workout</button>
+            <button id="finish-workout-btn" class="btn btn-primary btn-full-width">Finish Workout</button>
         </div>
 
     </main>

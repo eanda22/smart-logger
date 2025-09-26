@@ -1,11 +1,11 @@
 /* Global styles for the entire site */
 :root {
-    --bg-dark: #121212;
-    --surface-dark: #1e1e1e;
-    --primary-accent: #3498db;
-    --text-primary: #e0e0e0;
-    --text-secondary: #a0a0a0;
-    --border-color: #333333;
+    --bg-light: #f8f9fa;
+    --surface: #ffffff;
+    --primary-accent: #4a90e2; /* A modern, friendly blue */
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
 }
 
 * {
@@ -16,7 +16,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-light);
     color: var(--text-primary);
     display: flex;
     justify-content: center;
@@ -54,11 +54,11 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:disabled {
-    background-color: #555;
+    background-color: #ccc;
     cursor: not-allowed;
 }
 
@@ -68,17 +68,19 @@ body {
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: #2980b9;
+    background-color: #357abd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
     background-color: transparent;
     color: var(--primary-accent);
-    border: 1px solid var(--primary-accent);
+    border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: rgba(52, 152, 219, 0.1);
+    background-color: #f1f3f5;
+    border-color: #adb5bd;
 }
 
 /* --- Modern Dropdown Styling --- */
@@ -100,7 +102,7 @@ body {
     width: 12px;
     height: 12px;
     transform: translateY(-50%);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0a0'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236c757d'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     pointer-events: none;

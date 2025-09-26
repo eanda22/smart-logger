@@ -1,6 +1,6 @@
 /* Styles specific to workout.html */
 
-/* --- Workout Page General Layout --- */
+/* --- General & Setup View --- */
 .workout-container {
     max-width: 700px;
 }
@@ -11,17 +11,14 @@
 .workout-header h1 {
     font-size: 2rem;
 }
-
-/* --- Workout Page Card Styling --- */
 .card {
-    background-color: var(--surface-dark);
+    background-color: var(--surface);
     padding: 2rem;
     border-radius: 12px;
     margin-bottom: 2rem;
     border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
-
-/* --- Workout Page: Setup View --- */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -36,7 +33,7 @@
     width: 100%;
     font-size: 1.1rem;
     padding: 0.8rem;
-    background-color: var(--bg-dark);
+    background-color: var(--surface);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
     border-radius: 6px;
@@ -44,9 +41,6 @@
 .compound-input {
     display: flex;
     gap: 0.5rem;
-}
-.compound-input .select-wrapper {
-    flex-grow: 1;
 }
 .btn-add {
     padding: 0 1.2rem;
@@ -58,16 +52,9 @@
     cursor: pointer;
 }
 
-/* --- Modern Draggable Exercise List --- */
-#exercise-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    text-align: left;
-}
+/* --- Draggable Exercise List --- */
 #exercise-list li {
-    background-color: var(--bg-dark);
+    background-color: #f1f3f5;
     padding: 0.75rem 1rem;
     border-radius: 8px;
     margin-bottom: 0.75rem;
@@ -75,22 +62,10 @@
     justify-content: space-between;
     align-items: center;
     cursor: grab;
-    user-select: none;
-    border: 1px solid var(--border-color);
-}
-#exercise-list li.dragging {
-    opacity: 0.5;
-    background-color: var(--primary-accent);
-}
-.exercise-item-content {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
 }
 .drag-handle {
     color: var(--text-secondary);
     font-size: 1.5rem;
-    line-height: 1;
 }
 .remove-exercise-btn {
     background: none;
@@ -100,83 +75,102 @@
     cursor: pointer;
 }
 
-/* --- Workout Page: Logging View --- */
-#workout-progress-indicator {
-    color: var(--text-secondary);
-    margin-top: 0.5rem;
-}
-#exercise-content-container {
-    background-color: var(--surface-dark);
-    padding: 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+/* --- Autocomplete --- */
+.autocomplete-wrapper { position: relative; }
+#autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--surface);
     border: 1px solid var(--border-color);
-    min-height: 200px;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
 }
-.sets-prompt, .sets-entry {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
 }
-.sets-prompt .form-group {
-    width: 50%;
-    min-width: 200px;
-}
-.set-inputs-header {
-    display: grid;
-    grid-template-columns: 2rem 1fr 1fr;
-    gap: 0.5rem;
-    width: 100%;
-    text-align: left;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    padding: 0 0.5rem;
-}
-.set-inputs-container {
-    display: grid;
-    grid-template-columns: 2rem 1fr 1fr;
-    gap: 0.5rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    width: 100%;
-}
-.set-inputs-container input, .set-inputs-container select {
-    font-size: 1rem;
-    padding: 0.75rem;
-}
-.set-number {
-    color: var(--text-secondary);
-    font-weight: 700;
-}
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+.suggestion-item:hover {
+    background-color: #f1f3f5;
 }
 
-/* --- Workout Page: Summary View --- */
-#summary-container {
-    text-align: left;
+/* --- NEW Single-Page Logging View --- */
+.exercise-log-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
-.summary-exercise {
+.exercise-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
 }
-.summary-exercise:last-of-type {
-    margin-bottom: 0;
+.exercise-log-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
 }
-.summary-exercise h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-}
-.summary-exercise table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.summary-exercise th, .summary-exercise td {
-    padding: 0.5rem;
+.set-controls button {
+    background-color: #f1f3f5;
     border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    margin-left: 0.5rem;
 }
-.summary-exercise th {
-    background-color: var(--bg-dark);
+.set-log-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.set-input-bar {
+    display: grid;
+    /* This updated line prevents the grid from overflowing its container */
+    grid-template-columns: 20px minmax(0, 1fr) auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+}
+.set-number {
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.set-input-bar input {
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: #f8f9fa;
+}
+.unit-selector {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.unit-btn {
+    background-color: #f1f3f5;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    min-width: 40px; /* Ensures buttons have a consistent width */
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.unit-btn.active {
+    background-color: var(--primary-accent);
+    color: white;
+    border-color: var(--primary-accent);
 }

@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- STATE MANAGEMENT ---
-    let currentView = 'setup'; // 'setup', 'logging', 'summary'
     let workoutName = 'Custom Workout';
     let exerciseList = [];
-    let currentExerciseIndex = 0;
-    let workoutData = {}; // Object to store all sets data for the current session
 
     // --- DATA ---
     const templates = {
@@ -19,47 +16,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM ELEMENTS ---
     const setupView = document.getElementById('setup-view');
     const loggingView = document.getElementById('logging-view');
-    const summaryView = document.getElementById('summary-view');
-
-    // Setup View Elements
     const templateSelect = document.getElementById('workout-template');
     const addExerciseInput = document.getElementById('add-exercise-input');
     const addExerciseBtn = document.getElementById('add-exercise-btn');
     const exerciseListEl = document.getElementById('exercise-list');
     const startWorkoutBtn = document.getElementById('start-workout-btn');
     const autocompleteSuggestions = document.getElementById('autocomplete-suggestions');
-
-    // Logging View Elements
     const loggingWorkoutTitle = document.getElementById('logging-workout-title');
-    const loggingExerciseName = document.getElementById('logging-exercise-name');
-    const workoutProgressIndicator = document.getElementById('workout-progress-indicator');
-    const exerciseContentContainer = document.getElementById('exercise-content-container');
-    const prevExerciseBtn = document.getElementById('prev-exercise-btn');
-    const nextExerciseBtn = document.getElementById('next-exercise-btn');
-
-    // Summary View Elements
-    const summaryTitle = document.getElementById('summary-title');
-    const summaryContainer = document.getElementById('summary-container');
-    const logAnotherBtn = document.getElementById('log-another-btn');
+    const logAllExercisesContainer = document.getElementById('log-all-exercises-container');
+    const finishWorkoutBtn = document.getElementById('finish-workout-btn');
 
     // --- FUNCTIONS ---
     function showView(viewName) {
-        currentView = viewName;
         setupView.classList.add('hidden');
         loggingView.classList.add('hidden');
-        summaryView.classList.add('hidden');
-
         if (viewName === 'setup') setupView.classList.remove('hidden');
         if (viewName === 'logging') loggingView.classList.remove('hidden');
-        if (viewName === 'summary') summaryView.classList.remove('hidden');
     }
 
     // --- SETUP VIEW LOGIC ---
-    function renderExerciseList() {
+    function renderSetupExerciseList() {
         exerciseListEl.innerHTML = '';
         exerciseList.forEach((exercise, index) => {
             const li = document.createElement('li');
-            li.setAttribute('draggable', true);
             li.dataset.index = index;
             li.innerHTML = `
                 <div class="exercise-item-content">
@@ -94,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const exerciseName = addExerciseInput.value.trim();
         if (exerciseName && !exerciseList.includes(exerciseName)) {
             exerciseList.push(exerciseName);
-            renderExerciseList();
+            renderSetupExerciseList();
             addExerciseInput.value = '';
             autocompleteSuggestions.innerHTML = '';
         }
@@ -104,134 +83,119 @@ document.addEventListener('DOMContentLoaded', () => {
         const templateKey = templateSelect.value;
         workoutName = templateSelect.options[templateSelect.selectedIndex].text;
         exerciseList = templateKey === 'custom' ? [] : [...templates[templateKey]];
-        renderExerciseList();
+        renderSetupExerciseList();
     }
 
-    // --- DRAG AND DROP LOGIC ---
-    let draggedItem = null;
-    function handleDragStart(e) {
-        draggedItem = e.target;
-        setTimeout(() => e.target.classList.add('dragging'), 0);
-    }
-    function handleDragEnd(e) { e.target.classList.remove('dragging'); }
-    function handleDragOver(e) {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(exerciseListEl, e.clientY);
-        const dragging = document.querySelector('.dragging');
-        if (afterElement == null) {
-            exerciseListEl.appendChild(dragging);
-        } else {
-            exerciseListEl.insertBefore(dragging, afterElement);
-        }
-    }
-    function handleDrop() {
-        const newOrder = [...exerciseListEl.children].map(li => li.querySelector('.exercise-item-content span:last-child').textContent);
-        exerciseList = newOrder;
-        renderExerciseList();
-    }
-    function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('li:not(.dragging)')];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
-
-    // --- LOGGING VIEW LOGIC ---
+    // --- NEW LOGGING VIEW LOGIC ---
     function renderLoggingView() {
-        if (currentExerciseIndex >= exerciseList.length) return;
-        const exerciseName = exerciseList[currentExerciseIndex];
+        logAllExercisesContainer.innerHTML = '';
         loggingWorkoutTitle.textContent = workoutName;
-        loggingExerciseName.textContent = exerciseName;
-        workoutProgressIndicator.textContent = `Exercise ${currentExerciseIndex + 1} of ${exerciseList.length}`;
-        promptForSets(exerciseName);
-        prevExerciseBtn.disabled = currentExerciseIndex === 0;
-        nextExerciseBtn.textContent = (currentExerciseIndex === exerciseList.length - 1) ? 'Finish & View Summary' : 'Next Exercise →';
-    }
 
-    function promptForSets(exerciseName) {
-        exerciseContentContainer.innerHTML = `
-            <div class="sets-prompt">
-                <h3>How many sets of ${exerciseName}?</h3>
-                <div class="form-group">
-                    <input type="number" id="num-sets-input" min="1" value="3" class="form-control">
-                </div>
-                <button id="confirm-sets-btn" class="btn btn-primary">Confirm</button>
-            </div>
-        `;
-        document.getElementById('confirm-sets-btn').addEventListener('click', () => {
-            const numSets = parseInt(document.getElementById('num-sets-input').value);
-            if (numSets > 0) {
-                generateSetInputs(exerciseName, numSets);
+        exerciseList.forEach((exerciseName, index) => {
+            const exerciseCard = document.createElement('div');
+            exerciseCard.className = 'exercise-log-card';
+            exerciseCard.dataset.exerciseIndex = index;
+            
+            let setBarsHTML = '';
+            for (let i = 1; i <= 3; i++) { // Default to 3 sets
+                setBarsHTML += createSetBarHTML(i);
             }
-        });
-    }
 
-    function generateSetInputs(exerciseName, numSets) {
-        let setRowsHTML = '';
-        for (let i = 1; i <= numSets; i++) {
-            setRowsHTML += `
-                <div class="set-inputs-container">
-                    <span class="set-number">${i}</span>
-                    <div class="compound-input">
-                        <input type="number" placeholder="Weight" class="metric1-value" aria-label="Weight for set ${i}">
-                        <div class="select-wrapper"><select class="metric1-unit"><option value="lbs">lbs</option><option value="kg">kg</option><option value="BW">BW</option></select></div>
-                    </div>
-                    <div class="compound-input">
-                        <input type="number" placeholder="Reps" class="metric2-value" aria-label="Reps for set ${i}">
-                        <div class="select-wrapper"><select class="metric2-unit"><option value="reps">reps</option><option value="seconds">seconds</option></select></div>
+            exerciseCard.innerHTML = `
+                <div class="exercise-log-header">
+                    <h3>${exerciseName}</h3>
+                    <div class="set-controls">
+                        <button class="remove-set-btn" data-exercise-index="${index}">-</button>
+                        <button class="add-set-btn" data-exercise-index="${index}">+</button>
                     </div>
                 </div>
+                <div class="set-log-container">${setBarsHTML}</div>
             `;
-        }
-        exerciseContentContainer.innerHTML = `
-            <div class="sets-entry">
-                <div class="set-inputs-header"><span>Set</span><span>Metric 1 (Weight/BW)</span><span>Metric 2 (Reps/Time)</span></div>
-                ${setRowsHTML}
+            logAllExercisesContainer.appendChild(exerciseCard);
+        });
+    }
+    
+    function createSetBarHTML(setNumber) {
+        return `
+            <div class="set-input-bar">
+                <span class="set-number">${setNumber}</span>
+                <input type="number" placeholder="Weight" class="metric1-value">
+                <div class="unit-selector" data-metric="1">
+                    <button class="unit-btn active" data-value="lbs">lbs</button>
+                    <button class="unit-btn" data-value="kg">kg</button>
+                    <button class="unit-btn" data-value="in">in</button>
+                </div>
+                <input type="number" placeholder="Reps" class="metric2-value">
+                <div class="unit-selector" data-metric="2">
+                    <button class="unit-btn active" data-value="reps">reps</button>
+                    <button class="unit-btn" data-value="sec">sec</button>
+                    <button class="unit-btn" data-value="min">min</button>
+                </div>
             </div>
         `;
     }
 
-    function saveCurrentExerciseData() {
-        const exerciseName = exerciseList[currentExerciseIndex];
-        const sets = [];
-        const setRows = document.querySelectorAll('#exercise-content-container .set-inputs-container');
-        setRows.forEach((row, setIndex) => {
-            const metric1Value = parseFloat(row.querySelector('.metric1-value').value);
-            const metric1Unit = row.querySelector('.metric1-unit').value;
-            const metric2Value = parseFloat(row.querySelector('.metric2-value').value);
-            const metric2Unit = row.querySelector('.metric2-unit').value;
-            if (!isNaN(metric1Value) && !isNaN(metric2Value)) {
-                sets.push({ set_number: setIndex + 1, metric1_value: metric1Value, metric1_unit: metric1Unit, metric2_value: metric2Value, metric2_unit: metric2Unit });
-            }
-        });
-        if (sets.length > 0) { workoutData[exerciseName] = sets; }
-    }
-
-    // --- SUMMARY VIEW LOGIC ---
-    function generateSummary() {
-        summaryTitle.textContent = `Summary: ${workoutName}`;
-        summaryContainer.innerHTML = '';
-        const allSetDataForAPI = [];
-        for (const exerciseName in workoutData) {
-            const sets = workoutData[exerciseName];
-            if (sets.length > 0) {
-                let tableRows = sets.map(s => `<tr><td>${s.set_number}</td><td>${s.metric1_value} ${s.metric1_unit}</td><td>${s.metric2_value} ${s.metric2_unit}</td></tr>`).join('');
-                summaryContainer.innerHTML += `
-                    <div class="summary-exercise">
-                        <h3>${exerciseName}</h3>
-                        <table><thead><tr><th>Set</th><th>Metric 1</th><th>Metric 2</th></tr></thead><tbody>${tableRows}</tbody></table>
-                    </div>`;
-                sets.forEach(set => { allSetDataForAPI.push({ workout_name: workoutName, exercise_name: exerciseName, ...set }); });
+    function handleSetModification(e) {
+        const target = e.target;
+        
+        // Handle Add/Remove Set Buttons
+        if (target.matches('.add-set-btn, .remove-set-btn')) {
+            const exerciseIndex = target.dataset.exerciseIndex;
+            const card = document.querySelector(`.exercise-log-card[data-exercise-index='${exerciseIndex}']`);
+            const setContainer = card.querySelector('.set-log-container');
+            
+            if (target.matches('.add-set-btn')) {
+                const newSetNumber = setContainer.children.length + 1;
+                setContainer.insertAdjacentHTML('beforeend', createSetBarHTML(newSetNumber));
+            } else if (target.matches('.remove-set-btn')) {
+                if (setContainer.children.length > 1) {
+                    setContainer.lastElementChild.remove();
+                }
             }
         }
+
+        // Handle Unit Button Clicks
+        if (target.matches('.unit-btn')) {
+            // Remove 'active' class from siblings
+            const siblings = target.parentElement.querySelectorAll('.unit-btn');
+            siblings.forEach(btn => btn.classList.remove('active'));
+            // Add 'active' class to the clicked button
+            target.classList.add('active');
+        }
+    }
+
+    function saveWorkoutData() {
+        const allSetDataForAPI = [];
+        const exerciseCards = document.querySelectorAll('.exercise-log-card');
+
+        exerciseCards.forEach((card, index) => {
+            const exerciseName = exerciseList[index];
+            const setBars = card.querySelectorAll('.set-input-bar');
+            setBars.forEach((bar, setIndex) => {
+                const metric1Value = parseFloat(bar.querySelector('.metric1-value').value) || 0;
+                const metric1Unit = bar.querySelector('.unit-selector[data-metric="1"] .active').dataset.value;
+                const metric2Value = parseFloat(bar.querySelector('.metric2-value').value) || 0;
+                const metric2Unit = bar.querySelector('.unit-selector[data-metric="2"] .active').dataset.value;
+
+                if (metric1Value > 0 && metric2Value > 0) {
+                    allSetDataForAPI.push({
+                        workout_name: workoutName,
+                        exercise_name: exerciseName,
+                        set_number: setIndex + 1,
+                        metric1_value: metric1Value,
+                        metric1_unit: metric1Unit,
+                        metric2_value: metric2Value,
+                        metric2_unit: metric2Unit,
+                    });
+                }
+            });
+        });
+        
         console.log("SENDING TO API:", allSetDataForAPI);
         // allSetDataForAPI.forEach(log => postWorkoutLog(log));
+
+        alert('Workout Finished! (Data logged to console)');
+        showView('setup');
     }
 
     // --- EVENT LISTENERS ---
@@ -240,51 +204,22 @@ document.addEventListener('DOMContentLoaded', () => {
     templateSelect.addEventListener('change', handleTemplateChange);
     exerciseListEl.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-exercise-btn')) {
-            const index = parseInt(e.target.dataset.index);
-            exerciseList.splice(index, 1);
-            renderExerciseList();
+            exerciseList.splice(parseInt(e.target.dataset.index), 1);
+            renderSetupExerciseList();
         }
     });
-    exerciseListEl.addEventListener('dragstart', handleDragStart);
-    exerciseListEl.addEventListener('dragend', handleDragEnd);
-    exerciseListEl.addEventListener('dragover', handleDragOver);
-    exerciseListEl.addEventListener('drop', handleDrop);
     
     startWorkoutBtn.addEventListener('click', () => {
         if (exerciseList.length > 0) {
-            currentExerciseIndex = 0;
-            workoutData = {};
             renderLoggingView();
             showView('logging');
         } else {
             alert('Please add at least one exercise to your workout.');
         }
     });
-    
-    nextExerciseBtn.addEventListener('click', () => {
-        saveCurrentExerciseData();
-        if (currentExerciseIndex < exerciseList.length - 1) {
-            currentExerciseIndex++;
-            renderLoggingView();
-        } else {
-            generateSummary();
-            showView('summary');
-        }
-    });
-    
-    prevExerciseBtn.addEventListener('click', () => {
-        saveCurrentExerciseData();
-        if (currentExerciseIndex > 0) {
-            currentExerciseIndex--;
-            renderLoggingView();
-        }
-    });
-    
-    logAnotherBtn.addEventListener('click', () => {
-        exerciseList = [];
-        handleTemplateChange();
-        showView('setup');
-    });
+
+    logAllExercisesContainer.addEventListener('click', handleSetModification);
+    finishWorkoutBtn.addEventListener('click', saveWorkoutData);
 
     // --- INITIALIZATION ---
     showView('setup');
