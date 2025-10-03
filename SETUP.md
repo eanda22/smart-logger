@@ -16,32 +16,6 @@ Before you begin, ensure you have the following installed on your system:
 First, clone the project from the repository to your local machine.
 
 ```bash
-git clone [https://github.com/eanda22/smart-logger.git](https://github.com/eanda22/smart-logger.git)
-cd smart-logger
-```
-
-Of course. Here is the complete SETUP.md guide in a single markdown block that you can copy and paste directly into your file.
-
-Markdown
-
-# Development Environment Setup with Docker
-
-This guide will walk you through setting up and running the Smart Logger project on your local machine using Docker. This is the recommended method as it handles all dependencies and services automatically.
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your system:
-
--   **Git** for cloning the repository.
--   **Docker Desktop** for your operating system (Mac, Windows, or Linux). This single installation includes Docker Engine, the Docker CLI, and Docker Compose.
-
----
-
-## 1. Clone the Repository
-
-First, clone the project from the repository to your local machine.
-
-```bash
 git clone https://github.com/eanda22/smart-logger.git
 cd smart-logger
 ```
