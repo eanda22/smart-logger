@@ -89,7 +89,7 @@ Open a new terminal window.
 Execute into the desired container:
 - To get a shell in the backend container (e.g., to use manage.py or pip):
 ```bash
-docker compose exec backend sh
+docker compose exec backend /bin/bash
 ```
 - Your terminal prompt will change, and you will now be inside the backend container's /app directory.
 
