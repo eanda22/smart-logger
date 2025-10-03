@@ -28,6 +28,21 @@ async function fetchWorkoutSessions() {
     }
 }
 
+// This function fetches the most recent set data for a specific exercise
+async function fetchLatestSets(exerciseName) {
+    try {
+        const response = await fetch(`${API_URL}/exercises/latest_sets_by_name/?name=${encodeURIComponent(exerciseName)}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Failed to fetch latest sets for ${exerciseName}:`, error);
+        return []; // Return an empty array on error
+    }
+}
+
+
 // This function posts the entire session object, including all its sets
 async function postWorkoutSession(sessionData) {
     try {
@@ -55,4 +70,3 @@ async function postWorkoutSession(sessionData) {
         throw error; 
     }
 }
-

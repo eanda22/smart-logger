@@ -3,10 +3,16 @@ from .models import WorkoutSet, WorkoutSession, Exercise
 
 # This serializer handles the individual sets
 class WorkoutSetSerializer(serializers.ModelSerializer):
+    # When reading, this will use the exercise's name.
+    # When writing, it will find the Exercise object with the matching name.
+    exercise = serializers.SlugRelatedField(
+        queryset=Exercise.objects.all(),
+        slug_field='name'
+    )
+
     class Meta:
         model = WorkoutSet
-        # We don't need 'session' here because it will be linked automatically
-        fields = ['id', 'exercise_name', 'set_number', 'metric1_value', 'metric1_unit', 'metric2_value', 'metric2_unit']
+        fields = ['id', 'exercise', 'set_number', 'metric1_value', 'metric1_unit', 'metric2_value', 'metric2_unit']
 
 # This is the main serializer that now handles the nested creation
 class WorkoutSessionSerializer(serializers.ModelSerializer):
@@ -37,6 +43,3 @@ class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = '__all__'
-
-    
-

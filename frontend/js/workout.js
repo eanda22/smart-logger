@@ -107,17 +107,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- LOGGING VIEW LOGIC ---
-    function renderLoggingView() {
+    async function renderLoggingView() {
         workoutDateInput.value = new Date().toISOString().slice(0, 10);
         logAllExercisesContainer.innerHTML = '';
         loggingWorkoutTitle.textContent = workoutName;
         for (const [index, exerciseName] of exerciseList.entries()) {
             const definition = exercises[exerciseName];
             if (!definition) continue;
+
+            const latestSets = await fetchLatestSets(exerciseName);
             let setBarsHTML = '';
-            for (let i = 1; i <= 3; i++) {
-                setBarsHTML += createSetBarHTML(i, definition);
+            
+            // Determine the number of rows to render. Always show at least 3.
+            const rowsToRender = Math.max(3, latestSets.length);
+
+            for (let i = 1; i <= rowsToRender; i++) {
+                // Find historical data for the current set number, if it exists
+                const setData = latestSets.find(set => set.set_number === i);
+                setBarsHTML += createSetBarHTML(i, definition, setData);
             }
+
             const exerciseCardHTML = `
                 <div class="exercise-log-card" data-exercise-index="${index}">
                     <div class="exercise-log-header">
@@ -133,20 +142,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function createSetBarHTML(setNumber, definition) {
-        const createUnitButtons = (units) => {
+    function createSetBarHTML(setNumber, definition, setData = null) {
+        const metric1Value = setData ? `value="${setData.metric1_value}"` : '';
+        const metric2Value = setData ? `value="${setData.metric2_value}"` : '';
+
+        const createUnitButtonsWithPrefill = (units, latestUnit) => {
             if (!units || units.length === 0) return '';
-            return units.map((unit, index) => 
-                `<button class="unit-btn ${index === 0 ? 'active' : ''}" data-value="${unit}">${unit}</button>`
-            ).join('');
+            if (latestUnit && units.includes(latestUnit)) {
+                 return units.map(unit =>
+                    `<button class="unit-btn ${latestUnit === unit ? 'active' : ''}" data-value="${unit}">${unit}</button>`
+                 ).join('');
+            } else { // default behavior
+                 return units.map((unit, index) =>
+                    `<button class="unit-btn ${index === 0 ? 'active' : ''}" data-value="${unit}">${unit}</button>`
+                 ).join('');
+            }
         }
+
         return `
             <div class="set-input-bar">
                 <span class="set-number">${setNumber}</span>
-                <input type="number" placeholder="${definition.metric1_name}" class="metric1-value">
-                <div class="unit-selector" data-metric="1">${createUnitButtons(definition.metric1_units)}</div>
-                <input type="number" placeholder="${definition.metric2_name}" class="metric2-value">
-                <div class="unit-selector" data-metric="2">${createUnitButtons(definition.metric2_units)}</div>
+                <input type="number" placeholder="${definition.metric1_name}" class="metric1-value" ${metric1Value}>
+                <div class="unit-selector" data-metric="1">${createUnitButtonsWithPrefill(definition.metric1_units, setData?.metric1_unit)}</div>
+                <input type="number" placeholder="${definition.metric2_name}" class="metric2-value" ${metric2Value}>
+                <div class="unit-selector" data-metric="2">${createUnitButtonsWithPrefill(definition.metric2_units, setData?.metric2_unit)}</div>
             </div>
         `;
     }
@@ -188,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const metric2Unit = activeM2Btn ? activeM2Btn.dataset.value : '';
                 if (metric1Value > 0 || metric2Value > 0) {
                     setsData.push({
-                        exercise_name: exerciseName,
+                        exercise: exerciseName,
                         set_number: setIndex + 1,
                         metric1_value: metric1Value,
                         metric1_unit: metric1Unit,
@@ -255,4 +274,3 @@ document.addEventListener('DOMContentLoaded', () => {
         handleTemplateChange(); 
     });
 });
-

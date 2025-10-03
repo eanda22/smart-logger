@@ -94,8 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const exercises = {};
         session.sets.forEach(set => {
-            if (!exercises[set.exercise_name]) exercises[set.exercise_name] = [];
-            exercises[set.exercise_name].push(set);
+            // The API now returns 'exercise' with the name as a string
+            if (!exercises[set.exercise]) exercises[set.exercise] = [];
+            exercises[set.exercise].push(set);
         });
 
         let exerciseGroupsHTML = '';
@@ -143,4 +144,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial Load ---
     renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
 });
-
