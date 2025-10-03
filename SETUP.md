@@ -1,121 +1,152 @@
-# Development Environment Setup
-This guide will walk you through setting up and running the Smart Logger project on your local machine for development. The project consists of a Django backend and a vanilla HTML, CSS, and JavaScript frontend.
+# Development Environment Setup with Docker
+
+This guide will walk you through setting up and running the Smart Logger project on your local machine using Docker. This is the recommended method as it handles all dependencies and services automatically.
 
 ## Prerequisites
+
 Before you begin, ensure you have the following installed on your system:
 
-- Python 3.8+ and pip
-- PostgreSQL
-- Git for cloning the repository
+-   **Git** for cloning the repository.
+-   **Docker Desktop** for your operating system (Mac, Windows, or Linux). This single installation includes Docker Engine, the Docker CLI, and Docker Compose.
 
-## 1. Automated Environment Setup (direnv)
-For a much faster workflow, you can use direnv to automatically activate your Python virtual environment when you enter the project directory.
+---
 
-Install direnv. On macOS, you can use Homebrew:
+## 1. Clone the Repository
 
-```bash
-brew install direnv
-```
-
-Hook it into your shell. Add the following line to your shell's configuration file (e.g., ~/.zshrc or ~/.bash_profile):
+First, clone the project from the repository to your local machine.
 
 ```bash
-eval "$(direnv hook zsh)"
+git clone [https://github.com/eanda22/smart-logger.git](https://github.com/eanda22/smart-logger.git)
+cd smart-logger
 ```
 
-Restart your terminal or source your config file (e.g., source ~/.zshrc) to apply the changes.
+Of course. Here is the complete SETUP.md guide in a single markdown block that you can copy and paste directly into your file.
 
-The first time you navigate into the backend directory, you will need to authorize direnv to load the .envrc file.
+Markdown
 
-```bash
-cd backend
-direnv allow
-```
+# Development Environment Setup with Docker
 
-Now, your virtual environment will activate automatically every time you enter the backend directory.
+This guide will walk you through setting up and running the Smart Logger project on your local machine using Docker. This is the recommended method as it handles all dependencies and services automatically.
 
-## 2. Backend Setup (Django)
-The backend server provides the API that the frontend communicates with.
+## Prerequisites
 
-#### a. Set up the Environment
-Clone the repository (if you haven't already):
+Before you begin, ensure you have the following installed on your system:
+
+-   **Git** for cloning the repository.
+-   **Docker Desktop** for your operating system (Mac, Windows, or Linux). This single installation includes Docker Engine, the Docker CLI, and Docker Compose.
+
+---
+
+## 1. Clone the Repository
+
+First, clone the project from the repository to your local machine.
 
 ```bash
 git clone https://github.com/eanda22/smart-logger.git
 cd smart-logger
 ```
 
-Navigate to the backend directory:
+## 2. Launch the Application
+With Docker Desktop running, you can build the images and launch all the application services (frontend, backend, and database) with a single command.
 
-```
-cd backend
-```
-
-Create the virtual environment (only needs to be done once):
-
-```
-python3 -m venv venv
-```
-
-Activate the virtual environment (if not using direnv):
-
+Navigate to the root directory of the project (where the docker-compose.yml file is located) and run:
 ```bash
-source venv/bin/activate
+docker compose up --build
 ```
 
-Install Python dependencies (ensure the venv is active):
-Use the requirements.txt file to install all the necessary packages.
+``--build``: This flag tells Docker to build the images from the Dockerfiles the first time you run the command.
 
+This process may take a few minutes as Docker downloads the base images and builds your application. You will see logs from all three services in your terminal.
+
+## 3. Prepare the Database (First-Time Setup)
+After the containers are running, you need to prepare the database by running the initial Django migrations.
+
+Open a new terminal window (leave the one from the previous step running) and execute the following command:
+```bash
+docker compose exec backend python manage.py migrate
 ```
-pip install -r requirements.txt
+This command runs the migrate command inside the already running backend container.
+
+
+## 4. Create a Superuser (Optional)
+To access the Django admin interface, you need to create a superuser account.
+
+In the same new terminal, run:
+```bash
+docker compose exec backend python manage.py createsuperuser
+```
+You will be prompted to enter a username, email, and password.
+
+## 5. Accessing the Application
+Your development environment is now fully up and running!
+
+- Frontend Website: Open your browser and go to http://localhost:8080
+
+- Backend Admin Panel: Navigate to http://localhost:8000/admin and log in with the superuser credentials you just created.
+
+## Development Workflow & Management
+
+- Live Reloading: The project is configured with volumes, meaning any changes you make to the code in the frontend or backend directories on your local machine will be automatically reflected in the running containers.
+
+- Stopping the Application: To stop all services, go to the first terminal window (where you ran docker compose up) and press Ctrl + C.
+
+- Removing Containers: To completely remove the containers and the network, run:
+```bash
+docker compose down
 ```
 
-#### b. Set up the PostgreSQL Database
-Start the PostgreSQL service on your machine.
-
-Create a new database. The project is configured to use a database named smart_logger. You can create it using the psql command-line tool or a graphical tool like pgAdmin.
-
-```
-CREATE DATABASE smart_logger;
+- Removing the Database: If you want to delete all your data and start with a fresh database, run:
+```bash
+docker compose down -v
 ```
 
-Note: The default settings.py does not specify a user or password, assuming you can connect locally without them. If your PostgreSQL setup requires credentials, you will need to update the DATABASES section in backend/core/settings.py.
+## Advanced Development Workflow
+While the application runs, you may need to interact directly with the services inside the containers for debugging, running specific commands, or exploring the database.
 
-#### c. Prepare and Run the Backend Server
-Run database migrations to create the necessary tables:
+#### Accessing a Shell Inside a Container (CLI)
+You can open a command-line shell (/bin/sh) inside any running container. This is useful for running one-off commands or exploring the container's file system.
 
+**Ensure your containers are running:**
+```bash
+docker compose up
 ```
-python manage.py migrate
-```
-
-Start the Django development server:
-
-```
-python manage.py runserver
-```
-
-Your backend API is now running and accessible at http://127.0.0.1:8000.
-
-## 3. Frontend Setup (HTML/CSS/JS)
-The frontend is a set of static files. You need to serve them using a simple local web server.
-
 Open a new terminal window.
 
-Navigate to the frontend directory:
-
+Execute into the desired container:
+- To get a shell in the backend container (e.g., to use manage.py or pip):
+```bash
+docker compose exec backend sh
 ```
-cd smart-logger/frontend
+- Your terminal prompt will change, and you will now be inside the backend container's /app directory.
+
+- To connect to the database with psql:
+```bash
+docker compose exec db psql -U user -d smart_logger
+```
+This will connect you directly to the PostgreSQL command-line interface. Type \q to exit.
+
+#### Developing Inside a Container with VS Code
+For the best development experience, you can use Visual Studio Code to attach directly to a running container. This allows you to edit code, use the terminal, and run the debugger inside the container, giving you full access to its environment and tools without needing to install Python or other dependencies on your local machine.
+
+**Prerequisites:**
+
+- Install Visual Studio Code.
+
+- Install the Dev Containers extension from the VS Code Marketplace.
+
+**Steps to Connect:**
+
+- Start your application stack as usual:
+```bash
+docker compose up
 ```
 
-Start a simple Python web server:
+- Open your project folder (the one with docker-compose.yml) in VS Code.
 
-```
-python3 -m http.server 8080
-```
+- Open the Command Palette (Cmd+Shift+P on Mac, Ctrl+Shift+P on Windows/Linux).
 
-4. Accessing the Application
-You can now view the website in your browser.
+- Type Dev Containers: Attach to Running Container... and press Enter.
 
-Open your web browser and navigate to: http://127.0.0.1:8080
+- VS Code will show you a list of your running containers. Select the /smart-logger-backend-1 container.
 
-The frontend at port 8080 will make API calls to the backend running on port 8000. This works because the Django setting CORS_ALLOW_ALL_ORIGINS = True allows cross-origin requests from any domain.
+A new VS Code window will open, connected directly to the environment inside your backend container. You can now open a terminal (Ctrl+\`` or Cmd+``), edit files, set breakpoints, and run your Django application as if VS Code were running inside the container itself.
