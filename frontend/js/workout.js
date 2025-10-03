@@ -94,14 +94,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function handleTemplateChange() {
-        const category = templateSelect.value;
-        workoutName = templateSelect.options[templateSelect.selectedIndex].text;
-        
+    async function handleTemplateChange() {
+        const selectedOption = templateSelect.options[templateSelect.selectedIndex];
+        const category = selectedOption.value;
+        workoutName = selectedOption.text;
+    
         if (category === 'custom') {
             exerciseList = [];
         } else {
-            exerciseList = allKnownExerciseNames.filter(exName => exercises[exName]?.category === category);
+            // Try to fetch exercises from the last session of this type
+            const lastSessionExercises = await fetchLatestSessionExercises(workoutName);
+    
+            if (lastSessionExercises.length > 0) {
+                // If we found a previous session, use its exercises
+                exerciseList = lastSessionExercises;
+            } else {
+                // Fallback: If no previous session, get all exercises from that category
+                exerciseList = allKnownExerciseNames.filter(exName => exercises[exName]?.category === category);
+            }
         }
         renderSetupExerciseList();
     }

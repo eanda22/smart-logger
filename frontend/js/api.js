@@ -42,6 +42,19 @@ async function fetchLatestSets(exerciseName) {
     }
 }
 
+async function fetchLatestSessionExercises(templateName) {
+    try {
+        const response = await fetch(`${API_URL}/workout-sessions/latest_exercises_by_name/?name=${encodeURIComponent(templateName)}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Failed to fetch latest session exercises for ${templateName}:`, error);
+        return []; // Return empty array on failure
+    }
+}
+
 
 // This function posts the entire session object, including all its sets
 async function postWorkoutSession(sessionData) {

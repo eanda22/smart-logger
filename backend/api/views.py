@@ -12,7 +12,27 @@ class WorkoutSetViewSet(viewsets.ModelViewSet):
 class WorkoutSessionViewSet(viewsets.ModelViewSet):
     queryset = WorkoutSession.objects.all().order_by('-date')
     serializer_class = WorkoutSessionSerializer
-    
+
+    @action(detail=False, methods=['get'])
+    def latest_exercises_by_name(self, request):
+        """
+        Finds the latest workout session by name and returns a unique, ordered
+        list of exercise names from it.
+        e.g., /api/workout-sessions/latest_exercises_by_name/?name=Upper%20Body
+        """
+        session_name = request.query_params.get('name', None)
+        if session_name:
+            latest_session = WorkoutSession.objects.filter(name=session_name).order_by('-date').first()
+            if latest_session:
+                # Get the names of all exercises from that session, preserving the
+                # order they were likely added in and ensuring uniqueness.
+                exercise_names = list(WorkoutSet.objects.filter(session=latest_session)
+                                      .order_by('pk')
+                                      .values_list('exercise__name', flat=True))
+                unique_exercise_names = list(dict.fromkeys(exercise_names))
+                return Response(unique_exercise_names)
+        return Response([]) # Return empty list if no session found
+
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all().order_by('name')
     serializer_class = ExerciseSerializer
