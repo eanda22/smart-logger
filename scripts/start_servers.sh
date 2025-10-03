@@ -8,11 +8,11 @@ start() {
 
     # Start the Django backend server in the background
     echo "-> Starting Django backend server on port 8000..."
-    (cd backend && source venv/bin/activate && python manage.py runserver) &
+    (cd ../backend && source venv/bin/activate && python manage.py runserver) &
 
     # Start the simple Python frontend server in the background
     echo "-> Starting frontend server on port 8080..."
-    (cd frontend && python3 -m http.server 8080) &
+    (cd ../frontend && python3 -m http.server 8080) &
 
     echo "----------------------------------------"
     echo "✅ Servers are starting up."
