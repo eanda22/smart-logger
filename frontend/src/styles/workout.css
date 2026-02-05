@@ -1,0 +1,587 @@
+/* Styles specific to workout.html */
+
+/* --- General & Setup View --- */
+.workout-container {
+    max-width: 700px;
+}
+.workout-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.workout-header h1 {
+    font-size: 2rem;
+}
+.card {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: left;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.8rem;
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+}
+.compound-input {
+    display: flex;
+    gap: 0.5rem;
+}
+.btn-add {
+    padding: 0 1.2rem;
+    font-size: 1.5rem;
+    background-color: var(--primary-accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* --- Draggable Exercise List --- */
+#exercise-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+#exercise-list li {
+    background-color: #f1f3f5;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.drag-handle {
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: grab;
+}
+.exercise-name {
+    flex-grow: 1;
+}
+.remove-exercise-btn {
+    background: none;
+    border: none;
+    color: #c0392b;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.sortable-ghost {
+    opacity: 0.4;
+    background: #dbeafe;
+}
+
+
+/* --- Autocomplete --- */
+.autocomplete-wrapper { position: relative; }
+#autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+}
+.suggestion-item:hover {
+    background-color: #f1f3f5;
+}
+.suggestion-category {
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- NEW Single-Page Logging View --- */
+.exercise-log-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.exercise-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.exercise-log-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.set-controls button {
+    background-color: #f1f3f5;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+.set-log-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.set-input-bar {
+    display: grid;
+    /* This updated line prevents the grid from overflowing its container */
+    grid-template-columns: 20px minmax(0, 1fr) auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+}
+.set-number {
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.set-input-bar input {
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: #f8f9fa;
+}
+.unit-selector {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.unit-button {
+    background-color: #f1f3f5;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    min-width: 40px;
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.unit-button.active {
+    background-color: var(--primary-accent);
+    color: white;
+    border-color: var(--primary-accent);
+}
+
+/* --- Logging View --- */
+.logging-view {
+    padding: 1rem 0;
+}
+
+.logging-header {
+    background-color: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.logging-header h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+}
+
+.date-picker {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.date-picker label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.date-picker input {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.exercises-list {
+    margin-bottom: 2rem;
+}
+
+.exercise-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.exercise-header {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.exercise-header:hover {
+    background-color: #f1f3f5;
+}
+
+.exercise-header.expanded {
+    background-color: #e9ecef;
+}
+
+.exercise-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.expand-icon {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.exercise-body {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.loading {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 1rem;
+}
+
+.set-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.set-input-bar {
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.set-input-bar label {
+    display: block;
+    margin: 0 0 0.3rem 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.metric-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.metric-input input {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+}
+
+.remove-button {
+    background-color: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.remove-button:hover {
+    background-color: #fdd;
+}
+
+.set-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.add-button, .remove-last-button {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+.add-button:hover {
+    background-color: #f1f3f5;
+}
+
+.remove-last-button:hover {
+    background-color: #fee;
+    color: #c33;
+}
+
+.logging-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.back-button, .finish-button {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-button {
+    background-color: #f1f3f5;
+    color: var(--text-primary);
+}
+
+.back-button:hover {
+    background-color: #e9ecef;
+}
+
+.finish-button {
+    background-color: var(--primary-accent);
+    color: white;
+}
+
+.finish-button:hover {
+    opacity: 0.9;
+}
+
+/* --- Summary View --- */
+.summary-view {
+    padding: 1rem 0;
+}
+
+.summary-header {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.summary-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary-accent);
+}
+
+.summary-table-container {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: auto;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.summary-table thead {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.summary-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-right: 1px solid var(--border-color);
+}
+
+.summary-table th:last-child {
+    border-right: none;
+}
+
+.summary-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.summary-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.summary-table .exercise-name {
+    font-weight: 500;
+}
+
+.summary-table .set-number {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.summary-table .metric-value {
+    text-align: right;
+}
+
+.summary-table .unit {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-left: 0.25rem;
+}
+
+.metric-unit {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: normal;
+    display: block;
+}
+
+.summary-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.done-button {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary-accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.done-button:hover {
+    opacity: 0.9;
+}
+
+/* --- Error Modal & Loading Overlay --- */
+.error-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.error-content {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+.error-content h3 {
+    margin: 0 0 1rem 0;
+    color: #c33;
+    font-size: 1.3rem;
+}
+
+.error-content p {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.error-content button {
+    padding: 0.6rem 1.5rem;
+    background-color: #c33;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    transition: opacity 0.2s ease;
+}
+
+.error-content button:hover {
+    opacity: 0.9;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.loading-overlay p {
+    background-color: var(--surface);
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+}

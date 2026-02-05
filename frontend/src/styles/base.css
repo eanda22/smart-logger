@@ -1,0 +1,24 @@
+/* Global styles and CSS custom properties */
+
+:root {
+    --bg-light: #f8f9fa;
+    --surface: #ffffff;
+    --primary-accent: #4a90e2;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 1rem;
+}

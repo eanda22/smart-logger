@@ -1,3 +1,10 @@
+# Claude
+.claude/
+
+# Environment
+.env
+.env.local
+
 # Python build artifacts
 build/
 dist/
@@ -8,16 +15,6 @@ dist/
 venv/
 env/
 .venv/
-.env/
-
-# scripts
-scripts/
-
-# Django static files
-/static/
-
-# Django media files
-/media/
 
 # Database files
 *.sqlite3
@@ -27,6 +24,7 @@ scripts/
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
 
 # OS-generated files
 .DS_Store
@@ -41,6 +39,10 @@ Thumbs.db
 node_modules/
 npm-debug.log
 yarn-error.log
+frontend/dist/
+
+# Frontend build cache
+frontend/.vite/
 
 # Editor/IDE configuration files
 .idea/

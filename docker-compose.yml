@@ -18,27 +18,35 @@ services:
 
   backend:
     build: ./backend
-    command: python manage.py runserver 0.0.0.0:8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./backend:/app
+      - ./backend:/code
+      - ./scripts:/scripts
     ports:
       - "8000:8000"
     environment:
-      - POSTGRES_NAME=smart_logger
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_HOST=db
-    # --- UPDATE depends_on TO USE THE HEALTHCHECK ---
+      - DATABASE_URL=postgresql://user:password@db:5432/smart_logger
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:80
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/exercises')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build: ./frontend
-    volumes:
-      - ./frontend:/usr/share/nginx/html
     ports:
-      - "8080:80"
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
 
 volumes:
   postgres_data:

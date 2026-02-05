@@ -1,0 +1,51 @@
+# flyctl launch added from .gitignore
+# Python build artifacts
+**/build
+**/dist
+**/*.egg-info
+**/*.egg
+
+# Python virtual environment
+**/venv
+**/env
+**/.venv
+**/.env
+
+# scripts
+**/scripts
+
+# Django static files
+static
+
+# Django media files
+media
+
+# Database files
+**/*.sqlite3
+**/*.db
+
+# Python cache
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+
+# OS-generated files
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+
+# Frontend dependencies
+**/node_modules
+**/npm-debug.log
+**/yarn-error.log
+
+# Editor/IDE configuration files
+**/.idea
+**/.vscode
+**/*.swp
+**/*~
+fly.toml
