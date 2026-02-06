@@ -1,0 +1,215 @@
+/* Styles for the dashboard page */
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.dashboard-container h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.log-workout-btn {
+  display: inline-block;
+  background-color: var(--primary-accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.log-workout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Widget card styling (reusable for multiple widgets) */
+.widget-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.widget-card h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Contribution Graph Styles */
+.contribution-graph-container {
+  overflow-x: auto;
+}
+
+.contribution-year-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.contribution-year-arrow {
+  padding: 0.5rem 1rem;
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.contribution-year-arrow:hover:not(:disabled) {
+  background-color: var(--primary-accent);
+  color: white;
+  border-color: var(--primary-accent);
+}
+
+.contribution-year-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.contribution-year-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 60px;
+  text-align: center;
+}
+
+.contribution-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.contribution-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.contribution-day-label {
+  width: 40px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+  padding-right: 0.5rem;
+  min-height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.contribution-month-label {
+  width: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  min-height: 16px;
+}
+
+.contribution-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.contribution-cell:hover {
+  transform: scale(1.15);
+}
+
+/* Weight Chart Styles */
+.weight-chart-container {
+  width: 100%;
+}
+
+.weight-chart-select-wrapper {
+  margin-bottom: 1rem;
+}
+
+.weight-chart-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.weight-chart-select:hover {
+  border-color: var(--primary-accent);
+}
+
+.weight-chart-placeholder {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+/* Bottom row: 2-column grid for Calendar + Weight Chart */
+.dashboard-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Ensure calendar doesn't get wrapped in widget-card (it has .calendar-card already) */
+.dashboard-bottom-row .calendar-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard-bottom-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .contribution-graph-container {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .log-workout-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
