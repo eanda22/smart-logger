@@ -247,7 +247,7 @@ export async function patchExerciseFieldConfig(
   fieldConfig: Record<string, unknown>
 ): Promise<Exercise> {
   try {
-    const response = await fetch(`${API_URL}/exercises/${exerciseId}/field-config`, {
+    const response = await fetch(`${API_URL}/exercises/${exerciseId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

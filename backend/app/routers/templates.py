@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import asc
 
 from app.database import get_db
 from app.models import Template, TemplateExercise, Exercise
@@ -66,38 +65,6 @@ def get_template(template_id: int, db: Session = Depends(get_db)):
             detail=f"Template with id {template_id} not found",
         )
     return template
-
-
-@router.put("/templates/{template_id}", response_model=TemplateRead)
-def update_template(
-    template_id: int,
-    template_update: TemplateCreate,
-    db: Session = Depends(get_db),
-):
-    """Update template name.
-
-    Returns 404 if not found.
-    Returns 409 if new name is a duplicate.
-    """
-    db_template = db.query(Template).filter(Template.id == template_id).first()
-    if not db_template:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Template with id {template_id} not found",
-        )
-
-    db_template.name = template_update.name
-
-    try:
-        db.commit()
-        db.refresh(db_template)
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=f"Template with name '{template_update.name}' already exists",
-        )
-    return db_template
 
 
 @router.patch("/templates/{template_id}", response_model=TemplateRead)

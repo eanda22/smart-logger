@@ -8,9 +8,8 @@ import { useState, useEffect } from 'react'
 import { Exercise, WorkoutSet } from '../api/types'
 import { fetchLatestSets } from '../api/client'
 import StrengthExerciseCard from './StrengthExerciseCard'
-import CardioExerciseCard from './CardioExerciseCard'
+import SingleEntryExerciseCard from './SingleEntryExerciseCard'
 import FlexibilityExerciseCard from './FlexibilityExerciseCard'
-import RecoveryExerciseCard from './RecoveryExerciseCard'
 import AddExerciseModal from './AddExerciseModal'
 import '../styles/category.css'
 
@@ -20,6 +19,49 @@ interface LoggingViewProps {
   definitions: Exercise[]
   onBack: () => void
   onFinish: (allSets: { [exerciseName: string]: WorkoutSet[] }, workoutDate: string) => void
+}
+
+// Helper: create exercise sets with smart defaults from historical data
+function createExerciseSets(
+  exerciseName: string,
+  definition: Exercise | undefined,
+  historicalSets: WorkoutSet[]
+): WorkoutSet[] {
+  if (!definition) return []
+
+  const isSingleEntry =
+    definition.category_type === 'cardio' || definition.category_type === 'recovery'
+  const numSets = isSingleEntry ? 1 : 3
+
+  const exerciseSets: WorkoutSet[] = []
+  for (let i = 0; i < numSets; i++) {
+    if (i < historicalSets.length) {
+      exerciseSets.push({
+        id: 0,
+        exercise: exerciseName,
+        set_number: i + 1,
+        metric1_value: historicalSets[i].metric1_value,
+        metric1_unit: historicalSets[i].metric1_unit,
+        metric2_value: historicalSets[i].metric2_value,
+        metric2_unit: historicalSets[i].metric2_unit,
+        metric3_value: historicalSets[i].metric3_value,
+        metric3_unit: historicalSets[i].metric3_unit,
+      })
+    } else {
+      exerciseSets.push({
+        id: 0,
+        exercise: exerciseName,
+        set_number: i + 1,
+        metric1_value: null,
+        metric1_unit: definition.metric1_units[0] || '',
+        metric2_value: null,
+        metric2_unit: definition.metric2_units[0] || '',
+        metric3_value: null,
+        metric3_unit: definition.metric3_units?.[0] || '',
+      })
+    }
+  }
+  return exerciseSets
 }
 
 export default function LoggingView({
@@ -44,49 +86,10 @@ export default function LoggingView({
       for (const exerciseName of exercises) {
         setLoadingExercises((prev) => new Set(prev).add(exerciseName))
 
-        // Fetch historical sets for this exercise
         const historicalSets = await fetchLatestSets(exerciseName)
         const definition = definitions.find((d) => d.name === exerciseName)
+        newSets[exerciseName] = createExerciseSets(exerciseName, definition, historicalSets)
 
-        // Determine number of sets based on category type
-        const isSingleEntry =
-          definition?.category_type === 'cardio' ||
-          definition?.category_type === 'recovery'
-        const numSets = isSingleEntry ? 1 : 3
-
-        // Initialize with appropriate number of rows: pre-fill from history if available
-        const exerciseSets: WorkoutSet[] = []
-        for (let i = 0; i < numSets; i++) {
-          if (i < historicalSets.length) {
-            // Pre-fill with historical data
-            exerciseSets.push({
-              id: 0,
-              exercise: exerciseName,
-              set_number: i + 1,
-              metric1_value: historicalSets[i].metric1_value,
-              metric1_unit: historicalSets[i].metric1_unit,
-              metric2_value: historicalSets[i].metric2_value,
-              metric2_unit: historicalSets[i].metric2_unit,
-              metric3_value: historicalSets[i].metric3_value,
-              metric3_unit: historicalSets[i].metric3_unit,
-            })
-          } else {
-            // Empty row
-            exerciseSets.push({
-              id: 0,
-              exercise: exerciseName,
-              set_number: i + 1,
-              metric1_value: null,
-              metric1_unit: definition?.metric1_units[0] || '',
-              metric2_value: null,
-              metric2_unit: definition?.metric2_units[0] || '',
-              metric3_value: null,
-              metric3_unit: definition?.metric3_units?.[0] || '',
-            })
-          }
-        }
-
-        newSets[exerciseName] = exerciseSets
         setLoadingExercises((prev) => {
           const updated = new Set(prev)
           updated.delete(exerciseName)
@@ -165,44 +168,8 @@ export default function LoggingView({
       const definition = definitions.find((d) => d.name === exerciseName)
       if (!definition) return
 
-      // Fetch historical sets for smart defaults
       const historicalSets = await fetchLatestSets(exerciseName)
-
-      // Determine number of sets based on category type
-      const isSingleEntry =
-        definition.category_type === 'cardio' ||
-        definition.category_type === 'recovery'
-      const numSets = isSingleEntry ? 1 : 3
-
-      // Initialize sets with smart defaults
-      const exerciseSets: WorkoutSet[] = []
-      for (let i = 0; i < numSets; i++) {
-        if (i < historicalSets.length) {
-          exerciseSets.push({
-            id: 0,
-            exercise: exerciseName,
-            set_number: i + 1,
-            metric1_value: historicalSets[i].metric1_value,
-            metric1_unit: historicalSets[i].metric1_unit,
-            metric2_value: historicalSets[i].metric2_value,
-            metric2_unit: historicalSets[i].metric2_unit,
-            metric3_value: historicalSets[i].metric3_value,
-            metric3_unit: historicalSets[i].metric3_unit,
-          })
-        } else {
-          exerciseSets.push({
-            id: 0,
-            exercise: exerciseName,
-            set_number: i + 1,
-            metric1_value: null,
-            metric1_unit: definition.metric1_units[0] || '',
-            metric2_value: null,
-            metric2_unit: definition.metric2_units[0] || '',
-            metric3_value: null,
-            metric3_unit: definition.metric3_units?.[0] || '',
-          })
-        }
-      }
+      const exerciseSets = createExerciseSets(exerciseName, definition, historicalSets)
 
       setSets((prev) => ({
         ...prev,
@@ -260,7 +227,7 @@ export default function LoggingView({
 
             case 'cardio':
               return (
-                <CardioExerciseCard
+                <SingleEntryExerciseCard
                   key={exerciseName}
                   exerciseName={exerciseName}
                   definition={definition}
@@ -269,6 +236,7 @@ export default function LoggingView({
                     handleSetChange(exerciseName, index, newData)
                   }
                   isLoading={isLoading}
+                  cardType="cardio"
                 />
               )
 
@@ -290,7 +258,7 @@ export default function LoggingView({
 
             case 'recovery':
               return (
-                <RecoveryExerciseCard
+                <SingleEntryExerciseCard
                   key={exerciseName}
                   exerciseName={exerciseName}
                   definition={definition}
@@ -299,6 +267,7 @@ export default function LoggingView({
                     handleSetChange(exerciseName, index, newData)
                   }
                   isLoading={isLoading}
+                  cardType="recovery"
                 />
               )
 

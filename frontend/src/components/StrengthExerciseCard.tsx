@@ -8,6 +8,7 @@ import { Exercise, WorkoutSet } from '../api/types'
 import SetInputBar from './SetInputBar'
 import FieldCustomizationPanel from './FieldCustomizationPanel'
 import { useUpdateFieldConfig } from '../hooks/useFieldConfig'
+import { initializeBwToggles, updateBwToggles, calculateNewBwValue } from '../utils/bwToggleUtils'
 
 interface StrengthExerciseCardProps {
   exerciseName: string
@@ -33,46 +34,22 @@ export default function StrengthExerciseCard({
   const savedFields = (definition.field_config as any)?.visible_fields || ['metric1', 'metric2']
   const [visibleFields, setVisibleFields] = useState<string[]>(savedFields)
   const updateFieldConfig = useUpdateFieldConfig()
-  const [bwToggles, setBwToggles] = useState<{ [key: number]: boolean }>(() => {
-    // Initialize from existing data: check if metric1_value === "BW"
-    const initial: { [key: number]: boolean } = {}
-    sets.forEach((set, idx) => {
-      initial[idx] = set.metric1_value === 'BW'
-    })
-    return initial
-  })
+  const [bwToggles, setBwToggles] = useState(() => initializeBwToggles(sets))
 
-  // Memoize BW state updates to keep in sync with sets
+  // Keep BW state in sync with sets
   useMemo(() => {
-    setBwToggles((prev) => {
-      const updated = { ...prev }
-      sets.forEach((set, idx) => {
-        updated[idx] = set.metric1_value === 'BW'
-      })
-      return updated
-    })
+    setBwToggles((prev) => updateBwToggles(prev, sets))
   }, [sets])
 
   const handleBwToggle = (index: number) => {
     const currentSet = sets[index]
-    let newMetric1Value: string | null
+    const newMetric1Value = calculateNewBwValue(bwToggles[index])
 
-    if (bwToggles[index]) {
-      // Currently BW, switch to empty/last numeric value
-      newMetric1Value = null
-    } else {
-      // Currently numeric, switch to BW
-      newMetric1Value = 'BW'
-    }
-
-    const updatedSet: WorkoutSet = {
+    onSetChange(index, {
       ...currentSet,
       metric1_value: newMetric1Value,
-    }
+    })
 
-    onSetChange(index, updatedSet)
-
-    // Toggle state
     setBwToggles((prev) => ({
       ...prev,
       [index]: !prev[index],

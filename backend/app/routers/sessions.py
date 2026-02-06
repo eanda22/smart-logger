@@ -27,6 +27,8 @@ def _serialize_session(db_session: WorkoutSession) -> dict:
                 "metric1_unit": workout_set.metric1_unit,
                 "metric2_value": workout_set.metric2_value,
                 "metric2_unit": workout_set.metric2_unit,
+                "metric3_value": workout_set.metric3_value,
+                "metric3_unit": workout_set.metric3_unit,
             }
         )
 
@@ -136,33 +138,6 @@ def get_session(session_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Session with id {session_id} not found",
         )
-    return _serialize_session(db_session)
-
-
-@router.put("/sessions/{session_id}", response_model=WorkoutSessionRead)
-def update_session(
-    session_id: int,
-    session_update: WorkoutSessionUpdate,
-    db: Session = Depends(get_db),
-):
-    """Update session (name and date only, no set updates).
-
-    Returns 404 if not found.
-    """
-    db_session = db.query(WorkoutSession).filter(WorkoutSession.id == session_id).first()
-    if not db_session:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Session with id {session_id} not found",
-        )
-
-    # Update only provided fields
-    update_data = session_update.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(db_session, field, value)
-
-    db.commit()
-    db.refresh(db_session)
     return _serialize_session(db_session)
 
 

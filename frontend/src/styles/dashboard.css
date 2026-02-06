@@ -12,6 +12,32 @@
   font-weight: 700;
 }
 
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+}
+
+.templates-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background-color: var(--text-secondary);
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+
+.templates-button:hover {
+  background-color: #5a6b7a;
+}
+
 .log-workout-btn {
   display: inline-block;
   background-color: var(--primary-accent);
