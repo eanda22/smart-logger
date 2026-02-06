@@ -198,6 +198,100 @@
     border-color: var(--primary-accent);
 }
 
+/* --- Setup View (Template Selection) --- */
+
+.setup-view {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.setup-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.template-selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.template-selection-card {
+    background: var(--surface);
+    border: 1.5px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-family: inherit;
+    color: inherit;
+}
+
+.template-selection-card:hover {
+    border-color: var(--primary-accent);
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.2);
+}
+
+.template-selection-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.template-selection-card h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.template-selection-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.start-from-scratch-card {
+    background: transparent;
+    border: 2px dashed #D1D5DB;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-family: inherit;
+}
+
+.start-from-scratch-card:hover {
+    border-color: var(--primary-accent);
+    color: var(--primary-accent);
+    background: #f0f7ff;
+}
+
+.custom-workout-setup {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem 0;
+}
+
 /* --- Logging View --- */
 .logging-view {
     padding: 1rem 0;
@@ -229,16 +323,37 @@
 }
 
 .date-picker input {
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
     background-color: var(--surface);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 13px;
 }
 
 .exercises-list {
     margin-bottom: 2rem;
+}
+
+.floating-add-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 2px dashed #D1D5DB;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.floating-add-btn:hover {
+    border-color: var(--primary-accent);
+    color: var(--primary-accent);
+    background-color: rgba(59, 130, 246, 0.08);
 }
 
 .exercise-card {
@@ -378,9 +493,9 @@
 }
 
 .back-button, .finish-button {
-    padding: 0.75rem 2rem;
+    padding: 14px 2rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -394,6 +509,7 @@
 
 .back-button:hover {
     background-color: #e9ecef;
+    transform: translateY(-1px);
 }
 
 .finish-button {
@@ -403,6 +519,7 @@
 
 .finish-button:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* --- Summary View --- */
@@ -499,19 +616,20 @@
 }
 
 .done-button {
-    padding: 0.75rem 2rem;
+    padding: 14px 2rem;
     background-color: var(--primary-accent);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .done-button:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* --- Error Modal & Loading Overlay --- */
@@ -584,4 +702,40 @@
     border-radius: 8px;
     color: var(--text-primary);
     font-weight: 500;
+}
+
+/* Pre-filled badge for exercises with pre-filled data */
+.pre-filled-badge {
+    display: inline-block;
+    font-size: 11px;
+    color: #10B981;
+    background: #ECFDF5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-left: 0.75rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .template-selection-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .template-selection-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .date-picker {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .date-picker input {
+        width: 100%;
+    }
 }

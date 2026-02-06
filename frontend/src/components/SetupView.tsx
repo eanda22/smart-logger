@@ -1,11 +1,12 @@
 /**
- * Workout setup view: template selection, exercise autocomplete, draggable list
+ * Workout setup view: template selection grid
  */
 
 import { useState } from 'react'
 import { Exercise } from '../api/types'
-import { fetchLatestSessionExercises } from '../api/client'
-import ExerciseAutocomplete from './ExerciseAutocomplete'
+import { useTemplates } from '../hooks/useTemplates'
+import TemplateSelectionCard from './TemplateSelectionCard'
+import AddExerciseModal from './AddExerciseModal'
 import DraggableExerciseList from './DraggableExerciseList'
 
 interface SetupViewProps {
@@ -14,53 +15,29 @@ interface SetupViewProps {
 }
 
 export default function SetupView({ exercises, onStartWorkout }: SetupViewProps) {
-  const [workoutName, setWorkoutName] = useState('New Custom Workout')
+  const { data: templates = [] } = useTemplates()
+  const [view, setView] = useState<'template-grid' | 'custom-workout'>('template-grid')
+  const [workoutName, setWorkoutName] = useState('Custom Workout')
   const [selectedExercises, setSelectedExercises] = useState<string[]>([])
-  const [loading, setLoading] = useState(false)
+  const [showAddExerciseModal, setShowAddExerciseModal] = useState(false)
 
-  // Extract unique categories from exercises
-  const categories = Array.from(new Set(exercises.map((ex) => ex.category))).sort()
+  // Handle selecting a saved template
+  const handleSelectTemplate = (templateId: number) => {
+    const template = templates.find((t) => t.id === templateId)
+    if (template) {
+      setWorkoutName(template.name)
+      const exerciseNames = template.template_exercises
+        .map((te) => exercises.find((e) => e.id === te.exercise_id)?.name)
+        .filter(Boolean) as string[]
+      setSelectedExercises(exerciseNames)
+    }
+  }
 
-  // Template options: "New Custom Workout" + categories
-  const templateOptions = ['New Custom Workout', ...categories]
-
-  // Handle template selection
-  const handleTemplateChange = async (templateName: string) => {
-    setWorkoutName(templateName)
+  // Handle start from scratch
+  const handleStartFromScratch = () => {
+    setView('custom-workout')
+    setWorkoutName('Custom Workout')
     setSelectedExercises([])
-
-    if (templateName === 'New Custom Workout') {
-      // Clear exercises for custom workout
-      return
-    }
-
-    // Try to fetch exercises from latest session with this name
-    setLoading(true)
-    try {
-      const templateExercises = await fetchLatestSessionExercises(templateName)
-
-      if (templateExercises.length > 0) {
-        // Use exercises from latest session
-        setSelectedExercises(templateExercises)
-      } else {
-        // Fallback: get all exercises from this category
-        const categoryExercises = exercises
-          .filter((ex) => ex.category === templateName)
-          .map((ex) => ex.name)
-
-        setSelectedExercises(categoryExercises)
-      }
-    } catch (error) {
-      console.error('Error fetching template exercises:', error)
-      // Fallback: get all exercises from this category
-      const categoryExercises = exercises
-        .filter((ex) => ex.category === templateName)
-        .map((ex) => ex.name)
-
-      setSelectedExercises(categoryExercises)
-    } finally {
-      setLoading(false)
-    }
   }
 
   // Handle adding exercise from autocomplete
@@ -87,30 +64,43 @@ export default function SetupView({ exercises, onStartWorkout }: SetupViewProps)
     }
   }
 
-  return (
-    <div className="card">
-      <div className="form-group">
-        <label htmlFor="template-select">Workout Template</label>
-        <select
-          id="template-select"
-          value={workoutName}
-          onChange={(e) => handleTemplateChange(e.target.value)}
-          disabled={loading}
-        >
-          {templateOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
+  // Template grid view
+  if (view === 'template-grid') {
+    return (
+      <div className="setup-view">
+        <p className="setup-subtitle">Pick a template to pre-load exercises, or start from scratch.</p>
+
+        <div className="template-selection-grid">
+          {templates.map((template) => (
+            <TemplateSelectionCard
+              key={template.id}
+              template={template}
+              onClick={() => handleSelectTemplate(template.id)}
+            />
           ))}
-        </select>
+
+          <button className="start-from-scratch-card" onClick={handleStartFromScratch}>
+            + Start from Scratch
+          </button>
+        </div>
       </div>
+    )
+  }
 
-      {loading && <p style={{ color: 'var(--text-secondary)' }}>Loading exercises...</p>}
+  // Custom workout setup view
+  return (
+    <div className="custom-workout-setup">
+      <button
+        className="floating-add-btn"
+        onClick={() => setShowAddExerciseModal(true)}
+      >
+        + Add Exercise
+      </button>
 
-      <ExerciseAutocomplete
-        exercises={exercises}
-        existingExercises={selectedExercises}
-        onSelect={handleAddExercise}
+      <AddExerciseModal
+        isOpen={showAddExerciseModal}
+        onClose={() => setShowAddExerciseModal(false)}
+        onSelectExercise={handleAddExercise}
       />
 
       <DraggableExerciseList
@@ -127,8 +117,9 @@ export default function SetupView({ exercises, onStartWorkout }: SetupViewProps)
           backgroundColor: selectedExercises.length > 0 ? 'var(--primary-accent)' : '#ccc',
           color: 'white',
           border: 'none',
-          borderRadius: '6px',
+          borderRadius: '8px',
           cursor: selectedExercises.length > 0 ? 'pointer' : 'not-allowed',
+          marginTop: '1rem',
         }}
         onClick={handleStartWorkout}
         disabled={selectedExercises.length === 0}

@@ -29,7 +29,25 @@ export default function Home() {
 
   return (
     <div className="dashboard-container">
-      <h1>Smart Logger</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <h1 style={{ margin: 0 }}>Smart Logger</h1>
+        <Link
+          to="/templates"
+          style={{
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem',
+            backgroundColor: 'var(--text-secondary)',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#5a6b7a')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--text-secondary)')}
+        >
+          Templates
+        </Link>
+      </div>
 
       <Link to="/workout" className="log-workout-btn">
         + Log Workout

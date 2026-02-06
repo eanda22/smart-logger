@@ -1,0 +1,588 @@
+/**
+ * Category-specific exercise card styles
+ * Covers: Strength, Cardio, Flexibility, Recovery cards
+ */
+
+/* Shared styles for all category cards */
+.strength-exercise-card,
+.cardio-exercise-card,
+.flexibility-exercise-card,
+.recovery-exercise-card {
+  border: 1.5px solid #E5E7EB;
+  border-left: 4px solid;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.strength-exercise-card {
+  border-left-color: #3B82F6;
+}
+
+.cardio-exercise-card {
+  border-left-color: #10B981;
+}
+
+.flexibility-exercise-card {
+  border-left-color: #A855F7;
+}
+
+.recovery-exercise-card {
+  border-left-color: #F59E0B;
+}
+
+/* Exercise header (collapsible for strength/flexibility) */
+.strength-exercise-card .exercise-header,
+.cardio-exercise-card .exercise-header,
+.flexibility-exercise-card .exercise-header,
+.recovery-exercise-card .exercise-header {
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+/* Clickable header for strength/flexibility */
+.strength-exercise-card .exercise-header,
+.flexibility-exercise-card .exercise-header {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.strength-exercise-card .exercise-header:hover,
+.flexibility-exercise-card .exercise-header:hover {
+  background: var(--surface);
+  opacity: 0.9;
+}
+
+/* Expand icon */
+.exercise-header .expand-icon {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.exercise-header.expanded .expand-icon {
+  transform: rotate(0deg);
+}
+
+/* Exercise body container */
+.strength-exercise-card .exercise-body,
+.cardio-exercise-card .exercise-body,
+.flexibility-exercise-card .exercise-body,
+.recovery-exercise-card .exercise-body {
+  padding: 1rem 1.25rem;
+}
+
+/* Loading state */
+.exercise-body .loading {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 1rem;
+  margin: 0;
+}
+
+/* ============================================
+   STRENGTH EXERCISE CARD
+   ============================================ */
+
+.strength-set-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+
+.set-input-with-toggle {
+  flex: 1;
+}
+
+/* BW Display (when bodyweight is selected) */
+.strength-set-row .bw-display {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+}
+
+.bw-badge {
+  display: inline-block;
+  background: var(--primary-accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 45px;
+  text-align: center;
+}
+
+.bw-display .metric-input {
+  flex: 1;
+}
+
+/* BW Toggle Button */
+.bw-toggle-btn {
+  padding: 0.625rem 0.75rem;
+  background: var(--surface);
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  min-width: 50px;
+}
+
+.bw-toggle-btn:hover {
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.bw-toggle-btn.active {
+  background: var(--primary-accent);
+  color: white;
+  border-color: var(--primary-accent);
+}
+
+/* Remove set button (only show when BW active) */
+.remove-set-btn {
+  padding: 0.625rem 0.5rem;
+  background: transparent;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  min-width: 40px;
+  transition: all 0.15s;
+}
+
+.remove-set-btn:hover {
+  background: #fee;
+  border-color: #c00;
+  color: #c00;
+}
+
+/* Set inputs container */
+.set-inputs {
+  margin-bottom: 1rem;
+}
+
+/* Set grid header */
+.set-grid-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 60px 40px;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  margin-bottom: 0.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Pre-filled indicator styling */
+.metric-input.pre-filled input,
+.cardio-form-row.pre-filled input,
+.recovery-form-row.pre-filled input {
+  background-color: #f0f7ff;
+  border-color: #a8d5f7;
+}
+
+.metric-input.pre-filled,
+.cardio-form-row.pre-filled,
+.recovery-form-row.pre-filled {
+  opacity: 0.95;
+}
+
+.metric-input.pre-filled input:focus,
+.cardio-form-row.pre-filled input:focus,
+.recovery-form-row.pre-filled input:focus {
+  background-color: #ffffff;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+/* Set controls (add/remove buttons) */
+.set-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.add-button,
+.remove-last-button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.add-button {
+  border: 1.5px dashed rgba(59, 130, 246, 0.4);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.add-button:hover {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.remove-last-button {
+  background: var(--border-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.remove-last-button:hover {
+  background: #fee;
+  border-color: #c00;
+  color: #c00;
+}
+
+/* ============================================
+   CARDIO EXERCISE CARD (single-entry form)
+   ============================================ */
+
+.cardio-exercise-card .exercise-header {
+  cursor: default;
+}
+
+.cardio-exercise-card .exercise-header:hover {
+  background: var(--surface);
+}
+
+/* Single-entry form shared styles */
+.single-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardio-form-row,
+.recovery-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cardio-form-row label,
+.recovery-form-row label {
+  font-weight: 600;
+  color: #6B7280;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.metric-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.metric-input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.metric-input-row input:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.metric-input-row select {
+  padding: 10px 12px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background: white;
+  cursor: pointer;
+  min-width: 80px;
+  transition: border-color 0.15s;
+}
+
+.metric-input-row select:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* ============================================
+   FLEXIBILITY EXERCISE CARD (multi-set)
+   ============================================ */
+
+.flexibility-exercise-card {
+  /* Uses same layout as strength, just without BW toggle */
+}
+
+/* ============================================
+   RECOVERY EXERCISE CARD (single-entry form)
+   ============================================ */
+
+.recovery-exercise-card {
+  /* Uses same single-entry-form layout as cardio */
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .strength-exercise-card,
+  .cardio-exercise-card,
+  .flexibility-exercise-card,
+  .recovery-exercise-card {
+    margin-bottom: 0.75rem;
+  }
+
+  .exercise-header {
+    padding: 0.75rem;
+  }
+
+  .exercise-body {
+    padding: 0.75rem;
+  }
+
+  .strength-set-row {
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .bw-toggle-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    min-width: 45px;
+  }
+
+  .metric-input-row {
+    gap: 0.3rem;
+  }
+
+  .metric-input-row select {
+    min-width: 70px;
+  }
+
+  .set-controls {
+    flex-direction: column;
+  }
+
+  .add-button,
+  .remove-last-button {
+    width: 100%;
+  }
+
+  .single-entry-form {
+    gap: 0.75rem;
+  }
+
+  .cardio-form-row label,
+  .recovery-form-row label {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .exercise-header {
+    padding: 0.5rem;
+  }
+
+  .exercise-body {
+    padding: 0.5rem;
+  }
+
+  .strength-set-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bw-display {
+    flex-wrap: wrap;
+  }
+
+  .metric-input-row {
+    flex-direction: column;
+  }
+
+  .metric-input-row input,
+  .metric-input-row select {
+    width: 100%;
+  }
+
+  .metric-input-row select {
+    min-width: unset;
+  }
+
+  .set-controls {
+    gap: 0.5rem;
+  }
+
+  .bw-toggle-btn,
+  .remove-set-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Pre-filled styling on mobile */
+  .metric-input.pre-filled input,
+  .cardio-form-row.pre-filled input,
+  .recovery-form-row.pre-filled input {
+    background-color: #f0f7ff;
+  }
+}
+
+/* ============================================
+   FIELD CUSTOMIZATION PANEL
+   ============================================ */
+
+.field-customization-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-customization-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.field-customization-icon:hover {
+  opacity: 0.7;
+}
+
+.field-customization-modal {
+  position: static;
+  max-height: 0;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  z-index: 10;
+  transition: max-height 0.3s ease;
+}
+
+.field-customization-modal.visible {
+  max-height: 300px;
+  background: #F9FAFB;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.field-customization-content {
+  padding: 1rem 1.25rem;
+  border-top: 1.5px solid #E5E7EB;
+}
+
+.field-customization-content h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+}
+
+.field-customization-title {
+  display: block !important;
+}
+
+.field-toggles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  row-gap: 0.5rem;
+}
+
+.field-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.field-toggle input[type='checkbox'] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #D1D5DB;
+  accent-color: #3B82F6;
+  cursor: pointer;
+}
+
+.field-toggle:hover {
+  opacity: 0.8;
+}
+
+.close-btn {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  background: var(--primary-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.close-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Exercise header content wrapper */
+.exercise-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.exercise-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}

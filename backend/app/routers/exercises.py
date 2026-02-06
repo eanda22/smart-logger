@@ -88,6 +88,8 @@ def latest_sets_by_name(name: str, db: Session = Depends(get_db)):
                 "metric1_unit": workout_set.metric1_unit,
                 "metric2_value": workout_set.metric2_value,
                 "metric2_unit": workout_set.metric2_unit,
+                "metric3_value": workout_set.metric3_value,
+                "metric3_unit": workout_set.metric3_unit,
             }
         )
 
@@ -176,6 +178,32 @@ def patch_exercise(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Exercise with name '{exercise_update.name}' already exists",
         )
+    return db_exercise
+
+
+@router.patch("/exercises/{exercise_id}/field-config", response_model=ExerciseRead)
+def update_exercise_field_config(
+    exercise_id: int,
+    field_config: dict,
+    db: Session = Depends(get_db),
+):
+    """Update exercise field_config (which fields are visible).
+
+    Accepts JSON dict with field visibility configuration.
+    Example: {"visible_fields": ["metric1", "metric2", "metric3"]}
+
+    Returns 404 if not found.
+    """
+    db_exercise = db.query(Exercise).filter(Exercise.id == exercise_id).first()
+    if not db_exercise:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Exercise with id {exercise_id} not found",
+        )
+
+    db_exercise.field_config = field_config
+    db.commit()
+    db.refresh(db_exercise)
     return db_exercise
 
 

@@ -7,18 +7,15 @@
 import { useState } from 'react'
 import SetupView from '../components/SetupView'
 import LoggingView from '../components/LoggingView'
-import SummaryView from '../components/SummaryView'
 import { useExercises } from '../hooks/useExercises'
 import { postWorkoutSession } from '../api/client'
 import { WorkoutSet, SessionCreate } from '../api/types'
 import '../styles/workout.css'
 
 export default function Workout() {
-  const [view, setView] = useState<'setup' | 'logging' | 'summary'>('setup')
+  const [view, setView] = useState<'template' | 'logging'>('template')
   const [selectedExercises, setSelectedExercises] = useState<string[]>([])
   const [workoutName, setWorkoutName] = useState('')
-  const [workoutDate, setWorkoutDate] = useState('')
-  const [allSets, setAllSets] = useState<{ [exerciseName: string]: WorkoutSet[] }>({})
   const [saveError, setSaveError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -32,21 +29,18 @@ export default function Workout() {
   }
 
   const handleBack = () => {
-    setView('setup')
+    setView('template')
     setSelectedExercises([])
     setWorkoutName('')
-    setWorkoutDate('')
-    setAllSets({})
     setSaveError(null)
   }
 
-  const handleFinish = async (sets: { [exerciseName: string]: WorkoutSet[] }) => {
+  const handleFinish = async (sets: { [exerciseName: string]: WorkoutSet[] }, workoutDate: string) => {
     setIsSaving(true)
     setSaveError(null)
 
     try {
-      // Get workout date from sets or use today
-      const dateForSave = workoutDate || new Date().toISOString().split('T')[0]
+      const dateForSave = workoutDate
 
       // Construct the session object
       const flattenedSets = Object.entries(sets).flatMap(([exerciseName, setSets]) =>
@@ -69,10 +63,10 @@ export default function Workout() {
       // BUG FIX #2: AWAIT the POST before transitioning
       await postWorkoutSession(session)
 
-      // Only transition after successful save
-      setWorkoutDate(dateForSave)
-      setAllSets(sets)
-      setView('summary')
+      // Only transition after successful save, reset to template selection
+      setSelectedExercises([])
+      setWorkoutName('')
+      setView('template')
     } catch (error) {
       console.error('Error saving workout:', error)
       setSaveError('Failed to save workout. Please check your connection and try again.')
@@ -81,23 +75,13 @@ export default function Workout() {
     }
   }
 
-  const handleDone = () => {
-    // BUG FIX #3: Clear state completely and return to setup
-    setView('setup')
-    setSelectedExercises([])
-    setWorkoutName('')
-    setWorkoutDate('')
-    setAllSets({})
-    setSaveError(null)
-  }
-
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem 1rem' }}>
       <div className="workout-header">
         <h1>Log Workout</h1>
       </div>
 
-      {view === 'setup' && (
+      {view === 'template' && (
         <SetupView exercises={exercises} onStartWorkout={handleStartWorkout} />
       )}
 
@@ -127,13 +111,6 @@ export default function Workout() {
         </>
       )}
 
-      {view === 'summary' && (
-        <SummaryView
-          allSets={allSets}
-          definitions={exercises}
-          onDone={handleDone}
-        />
-      )}
     </div>
   )
 }

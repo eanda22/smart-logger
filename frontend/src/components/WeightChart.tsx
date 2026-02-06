@@ -42,7 +42,7 @@ export default function WeightChart({ sessions }: WeightChartProps) {
         const maxWeight = Math.max(
           ...session.sets
             .filter((set_) => set_.exercise === selectedExercise && set_.metric1_value !== null)
-            .map((set_) => set_.metric1_value as number)
+            .map((set_) => parseFloat(set_.metric1_value as string))
         )
         return {
           date: session.date.split('T')[0], // YYYY-MM-DD
